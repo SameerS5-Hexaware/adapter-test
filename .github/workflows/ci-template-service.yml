@@ -1,0 +1,32 @@
+name: template-service
+'on':
+  push:
+    branches:
+      - development
+      - release-1.0
+    paths:
+      - '**/template-service/**'
+env:
+  DOCKER_BUILD_FILE_PATH: ./template-service/Dockerfile.build
+  DOCKER_FILE_PATH: ./template-service/Dockerfile.publish
+  DOCKER_BUILD_CONTEXT: template-service
+  DOCKER_PUBLISH_CONTEXT: ./publish
+  CONTAINER_NAME: test_repo
+  REPOSITORY_NAME: test_repo
+jobs:
+  build_and_deploy:
+    runson: self-hosted
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v3
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+      - name: Build and Test
+        run: >-
+          docker build ${{ env.DOCKER_BUILD_CONTEXT }} -f ${{
+          env.DOCKER_BUILD_FILE_PATH }} -t ${{ secrets.ACR_LOGIN_SERVER }}/${{
+          env.REPOSITORY_NAME }}:${GITHUB_REF##*/}-${{ github.run_number }}
