@@ -1,8 +1,8 @@
-name: ci-manageservice
+name: ci-CDReleaseDemo
 'on':
   push:
     branches:
-      - main
+      - test
     paths:
       - '**/manageservice/**'
 env:
@@ -10,8 +10,8 @@ env:
   DOCKER_FILE_PATH: ./manageservice/Dockerfile.publish
   DOCKER_BUILD_CONTEXT: manageservice
   DOCKER_PUBLISH_CONTEXT: ./publish
-  CONTAINER_NAME: demo
-  REPOSITORY_NAME: demo
+  CONTAINER_NAME: cdreleasedemo
+  REPOSITORY_NAME: cdreleasedemo
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
